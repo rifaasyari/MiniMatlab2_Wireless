@@ -12,7 +12,8 @@ MiniMatlab Assignment #2
 %MIMO 
 % 2X2 , FLAT FADING GAINS, ( Pre-coding - CSIT , Zero-Forcing and MMSE - CSIR) .
 
-
+%useful reference for different receivers (ZF, MMSE, precoding)
+%http://www.mathworks.com/help/comm/examples/spatial-multiplexing.html
 
 
 %OFDM 
