@@ -1,4 +1,4 @@
-function [ BERR_ZF,BERR_MMSE,BERR_PRECODING,BERR_BASELINE ] = MIMO_PART1( H, SNR,str_type,modOrd)
+function [ BERR_ZF,BERR_MMSE,BERR_PRECODING,BERR_BASELINE ,BER_BASELINE] = MIMO_PART1( H, SNR,str_type,modOrd)
 
 %http://www.mathworks.com/help/comm/examples/spatial-multiplexing.html
 % channel side info 
@@ -26,7 +26,7 @@ EbNoVec = SNR - 10*log10(modOrd);        % Eb/No in dB
 % M-ary QAM    %qammod(dataSymbolsIn,M,0);     and qamdemod(receivedSignal,M);     
 %modOrd                      % Size of signal constellation
 k = log2(modOrd);                % Number of bits per symbol
-n = 30000;                  % Number of bits to process
+n = 5000;                  % Number of bits to process
 numSamplesPerSymbol = 1;    % Oversampling factor      
 rng default                 % Use default random number generator
 dataIn = randi([0 1],n,1);  % Generate vector of binary data
@@ -86,7 +86,7 @@ for idx = 1:length(SNR)
        
      
     %ZERO FORCING    
-    W_ZF = inv(H'*H)*H' ; 
+    W_ZF = pinv(H) ; 
     %Demodulate data
     rxSig_ZF = qamdemod(W_ZF*y,modOrd);
     BER_ZF(idx,p)  = biterr(rxSig_ZF,msg);
@@ -108,27 +108,25 @@ toc;
        
 % Set up a figure for visualizing BER results
 figure;
-grid on;
+semilogy(SNR(:), mean(BER_ZF,2)/modOrd, 'r*' , ...
+       SNR(:), mean(BER_MMSE,2)/modOrd, 'b+' , ...
+       SNR(:), mean(BER_PRECODING,2)/modOrd, 'mo', ...
+       SNR(:), mean(BER_BASELINE,2)/modOrd, 'k^');
+
 xlim([SNR(1)-0.01, SNR(end)]);
-ylim([ 0 1 ])
 xlabel('SNR (dB)');
 ylabel('AVERAGE BER');
-title(['2x2', num2str(M),'QAM',' System',' ' , str_type]);  
-hold on ;
-plot(SNR(:), sum(BER_ZF,2)/length(dataSymbolsIn), 'r*') 
-plot(SNR(:), sum(BER_MMSE,2)/length(dataSymbolsIn), 'b+') 
-plot(SNR(:), sum(BER_PRECODING,2)/length(dataSymbolsIn), 'mo') 
-plot(SNR(:), sum(BER_BASELINE,2)/length(dataSymbolsIn), 'k^');
+title(['2x2','', ' ' , num2str(modOrd),'QAM',' System',' ' , str_type]);  
 legend('ZF', 'MMSE', 'PRECODING','NO SCHEME');
-hold off;
+grid on;
 %%
 
 
 
-BERR_ZF = sum(BER_ZF,2)/length(dataSymbolsIn) ;
-BERR_MMSE = sum(BER_MMSE,2)/length(dataSymbolsIn);
-BERR_PRECODING = sum(BER_PRECODING,2)/length(dataSymbolsIn);
-BERR_BASELINE = sum(BER_BASELINE,2)/length(dataSymbolsIn);
+BERR_ZF = mean(BER_ZF,2)/modOrd ;
+BERR_MMSE = mean(BER_MMSE,2)/modOrd;
+BERR_PRECODING = mean(BER_PRECODING,2)/modOrd;
+BERR_BASELINE = mean(BER_BASELINE,2)/modOrd;
       
 
 
