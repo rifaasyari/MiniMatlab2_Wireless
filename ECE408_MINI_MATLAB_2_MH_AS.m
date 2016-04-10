@@ -29,19 +29,27 @@ warning('off','all')
 str_type1 = 'Correlated Case, H (FULL RANK)';
 SNR = 0:0.5:10;
 H_1 = 0.1*[ 1 , 2 ; 7 , 3 ]  ;
-modOrd = 4
-[ BERR_ZF,BERR_MMSE,BERR_PRECODING,BERR_BASELINE, BER_BASELINE] =MIMO_PART1( H_1,SNR,str_type1,modOrd);     
-        
+modOrd = 2;
+MIMO_PART1( H_1,SNR,str_type1,modOrd);     % 2qam
+MIMO_PART1( H_1,SNR,str_type1,modOrd^2);    % 4qam
+MIMO_PART1( H_1,SNR,str_type1,modOrd^3);     %8 qam
+MIMO_PART1( H_1,SNR,str_type1,modOrd^4);      %16 qam
 
 %% CHANNEL 2
 str_type2 = 'Uncorrelated Case, H (FULL RANK)';
 H_2 = 0.1*[ 2 0 ; 0 ,3.8];
-[ BERR_ZF,BERR_MMSE,BERR_PRECODING,BERR_BASELINE, BER_BASELINE] =MIMO_PART1( H_2,SNR,str_type2,modOrd); 
+MIMO_PART1( H_2,SNR,str_type2,modOrd);     % 2qam
+MIMO_PART1( H_2,SNR,str_type2,modOrd^2);    % 4qam
+MIMO_PART1( H_2,SNR,str_type2,modOrd^3);     %8 qam
+MIMO_PART1( H_2,SNR,str_type2,modOrd^4);      %16 qam 
 
 %% CHANNEL 3
 str_type3 = 'Correlated Case, H (NOT FULL RANK)';
 H_3 = 0.1*[ 6  3; 4 ,2];
-[ BERR_ZF,BERR_MMSE,BERR_PRECODING,BERR_BASELINE, BER_BASELINE] =MIMO_PART1( H_3,SNR,str_type3,modOrd);  
+MIMO_PART1( H_3,SNR,str_type3,modOrd);     % 2qam
+MIMO_PART1( H_3,SNR,str_type3,modOrd^2);    % 4qam
+MIMO_PART1( H_3,SNR,str_type3,modOrd^3);     %8 qam
+MIMO_PART1( H_3,SNR,str_type3,modOrd^4);      %16 qam 
     
  %%
 

@@ -26,7 +26,7 @@ EbNoVec = SNR - 10*log10(modOrd);        % Eb/No in dB
 % M-ary QAM    %qammod(dataSymbolsIn,M,0);     and qamdemod(receivedSignal,M);     
 %modOrd                      % Size of signal constellation
 k = log2(modOrd);                % Number of bits per symbol
-n = 5000;                  % Number of bits to process
+n = k*4*1000;                  % Number of bits to process
 numSamplesPerSymbol = 1;    % Oversampling factor      
 rng default                 % Use default random number generator
 dataIn = randi([0 1],n,1);  % Generate vector of binary data
@@ -107,7 +107,7 @@ toc;
     %%
        
 % Set up a figure for visualizing BER results
-figure;
+f1 = figure('Visible','off');
 semilogy(SNR(:), mean(BER_ZF,2)/modOrd, 'r*' , ...
        SNR(:), mean(BER_MMSE,2)/modOrd, 'b+' , ...
        SNR(:), mean(BER_PRECODING,2)/modOrd, 'mo', ...
@@ -117,8 +117,10 @@ xlim([SNR(1)-0.01, SNR(end)]);
 xlabel('SNR (dB)');
 ylabel('AVERAGE BER');
 title(['2x2','', ' ' , num2str(modOrd),'QAM',' System',' ' , str_type]);  
-legend('ZF', 'MMSE', 'PRECODING','NO SCHEME');
+legend('ZF', 'MMSE', 'PRECODING','NO SCHEME','Location','best');
 grid on;
+
+saveas(f1,strcat('2x2','_MIMO_', num2str(modOrd),'QAM', str_type),'png');
 %%
 
 
