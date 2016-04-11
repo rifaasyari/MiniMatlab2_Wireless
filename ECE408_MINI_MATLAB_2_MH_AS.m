@@ -1,6 +1,5 @@
 %{ 
 Alexander Serrano & Max Howald
-%Also collaborated with Jon Weinrib
 ECE 408 - WIRELESS COMMS
 Prof. Keene
 MiniMatlab Assignment #2 
@@ -27,9 +26,10 @@ clc; clear all; close force all;
 warning('off','all')
 %% CHANNEL 1
 str_type1 = 'Correlated Case, H (FULL RANK)';
-SNR = 0:0.5:10;
-H_1 = 0.1*[ 1 , 2 ; 7 , 3 ]  ;
+SNR = 0:0.25:10;
+H_1 =  0.1*[ 1 , 2 ; 7 , 3 ]  ;
 modOrd = 2;
+
 MIMO_PART1( H_1,SNR,str_type1,modOrd);     % 2qam
 MIMO_PART1( H_1,SNR,str_type1,modOrd^2);    % 4qam
 MIMO_PART1( H_1,SNR,str_type1,modOrd^3);     %8 qam

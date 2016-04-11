@@ -93,8 +93,8 @@ for idx = 1:length(SNR)
     
        
     %MMSE 
-    N_0 = 1; 
-    W_MMSE = inv(H'*H + N_0)*H' ; 
+    N_0 = 10^(-snrIndB/20); 
+    W_MMSE = inv(H'*H + N_0*eye(2))*H' ; 
     rxSig_MMSE = qamdemod(W_MMSE*y,modOrd);
     BER_MMSE(idx,p)  = biterr(rxSig_MMSE,msg) ;  
        
