@@ -1,4 +1,4 @@
-function [ output_args ] = OFDM_PART2(h, SNR,modOrd,mu,N_pts,N)
+function [ output_args ] = OFDM_PART2(h, SNR,modOrd,mu,N_pts,N,str)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -49,7 +49,7 @@ for kk = 1 : N_pts
 end
 toc; 
 
-H_freq = fft(h,N_pts) ; 
+H_freq = transpose(fft(h,N_pts)) ; 
  
 tic;
 % Loop over N symbol messages
@@ -81,48 +81,56 @@ for idx = 1:length(SNR)
     % Add noise to faded data   y = H* x + n
     n = 10^(-snrIndB/20)*(randn(N_pts, 1) + j*randn(N_pts, 1))/sqrt(2) ; 
     y_n  = H*x_input +  n ;
-     
-    Y_freq = fft(y_n,N_pts) ;
+    % y_n = awgn(H*x_input,snrIndB,1) ;
+    %y_remove_prefix = y_n(mu+1:end) ;
+    y_ordered = flipud(y_n);
+    Y_freq = fft(y_ordered,N_pts) ;
     
-    Y_ordered = flipud(Y_freq);
+    
     
     %BASELINE (NO EQUALIZATION)
-    rx_BASELINE = qamdemod(Y_ordered,modOrd); 
-    BER_BASELINE(idx,p) = biterr(rx_BASELINE,msg);
+    rx_BASELINE = qamdemod(Y_freq,modOrd); 
+    [BER_BASELINE(idx,p) rr1] = biterr(rx_BASELINE,msg);
+    
+    
       
     %ZERO-FORCING EQUALIZATION 
  
     %Demodulate data
-    X_ZF = Y_ordered ./ H_freq ;
+    X_ZF = Y_freq ./ H_freq ;
     rxSig_ZF = qamdemod(X_ZF,modOrd);
-    BER_ZF(idx,p)  = biterr(rxSig_ZF,msg);
+    [BER_ZF(idx,p), rr2]= biterr(rxSig_ZF,msg);
     
        
     %MMSE  EQUALIZATION
-    N_0 = 10^(-snrIndB/20); 
-    X_MMSE = Y_ordered ./ (H_freq + N_0);
+    N_0 = 10^(-snrIndB/10); 
+    X_MMSE = Y_freq ./ (H_freq + N_0*ones(size(H_freq)));
     rxSig_MMSE = qamdemod(X_MMSE,modOrd);
-    BER_MMSE(idx,p)  = biterr(rxSig_MMSE,msg) ;  
+    [BER_MMSE(idx,p),rr3]  = biterr(rxSig_MMSE,msg) ;  
        
-     
     
-    end    
+     
+     
+    end
 end    
 
+
+
+
 % Set up a figure for visualizing BER results
-f1 = figure('Visible','off');
-semilogy(SNR(:), mean(BER_ZF,2)/(N*k), 'r*' , ...
-       SNR(:), mean(BER_MMSE,2)/(N*k), 'b+' , ...
-       SNR(:), mean(BER_BASELINE,2)/(N*k), 'k^');
+f1 = figure; %('Visible','off');
+semilogy(SNR(:), mean(BER_ZF,2)/(N_pts*k), 'r*' , ...
+       SNR(:), mean(BER_MMSE,2)/(N_pts*k), 'b+' , ...
+       SNR(:), mean(BER_BASELINE,2)/(N_pts*k), 'k^' );
 xlabel('SNR (dB)');
 ylabel('AVERAGE BER');
 title(['OFDM',' ', num2str(modOrd),'QAM',' ','N =',num2str(N_pts),...
-             ' ', '\mu = ',num2str(mu)]);  
-legend('ZF', 'MMSE','NO EQUALIZER','Location','best');
+             ' ',' ' , ' \mu = ',num2str(mu), ' ' , str]);  
+legend('ZF', 'MMSE','NO EQ','Location','best');
 grid on;
 
 saveas(f1,strcat('OFDM_', num2str(modOrd),'QAM_','N',num2str(N_pts),...
-              '_mu',num2str(mu)),'png');
+              '_mu',num2str(mu), '_',str),'png');
 
 toc;
 %%

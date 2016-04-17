@@ -59,12 +59,54 @@ MIMO_PART1( H_3,SNR,str_type3,modOrd^4);      %16 qam
 
 %% PART 2 - OFDM 
 
+clc; clear all; close all; 
+SNR = 0:0.1:5;
+N_pts = 64;
+
+modOrd = 4; 
+
+mu = 16  ; % size of cyclic prefix
+%h1 = [ 1 ,zeros(1,mu+1) ] ;
+h1 = [ 0.99 , 0, 0 zeros(1,14) ];
+h2 =  [ 1 , 0.1 , 0.9, 0, zeros(1,13) ];
+
+h3 = [ 0.94 , 0.17 , 0.05 0.01 zeros(1,13) ];
+%h1 = 0.1*[ 5, 3, 2 ,zeros(1,14) ];  %MU = length(4)
+
+N = 64;
+
+tic;
+%2QAM
+OFDM_PART2(h2, SNR,modOrd,mu,N_pts,N,'h2');
+
+%%
+OFDM_PART2(h2, SNR,modOrd,mu,N_pts,N,'h2');
+OFDM_PART2(h3, SNR,modOrd,mu,N_pts,N,'h3');
+
+toc;
 
 
+%%
+tic;
+%4QAM
+OFDM_PART2(h1, SNR,modOrd^2,mu,N_pts,N,'h1');
+OFDM_PART2(h2, SNR,modOrd^2,mu,N_pts,N,'h2');
+OFDM_PART2(h3, SNR,modOrd^2,mu,N_pts,N,'h3');
+toc;
 
+tic;
+%8QAM
+OFDM_PART2(h1, SNR,modOrd^3,mu,N_pts,N,'h1');
+OFDM_PART2(h2, SNR,modOrd^3,mu,N_pts,N,'h2');
+OFDM_PART2(h3, SNR,modOrd^3,mu,N_pts,N,'h3');
+toc; 
 
-
-
+tic ; 
+%16QAM
+OFDM_PART2(h1, SNR,modOrd^4,mu,N_pts,N,'h1');
+OFDM_PART2(h2, SNR,modOrd^4,mu,N_pts,N,'h2');
+OFDM_PART2(h3, SNR,modOrd^4,mu,N_pts,N,'h3');
+toc;
 
 
 
