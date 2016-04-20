@@ -24,13 +24,15 @@ MiniMatlab Assignment #2
 clc; clear all; close force all;
 
 warning('off','all')
-%% CHANNEL 1
+% CHANNEL 1
 str_type1 = 'Correlated Case, H (FULL RANK)';
-SNR = 0:0.25:10;
+SNR = 0:1:30;
 H_1 =  0.1*[ 1 , 2 ; 7 , 3 ]  ;
-modOrd = 2;
+modOrd = 4;
 
 MIMO_PART1( H_1,SNR,str_type1,modOrd);     % 2qam
+
+%%
 MIMO_PART1( H_1,SNR,str_type1,modOrd^2);    % 4qam
 MIMO_PART1( H_1,SNR,str_type1,modOrd^3);     %8 qam
 MIMO_PART1( H_1,SNR,str_type1,modOrd^4);      %16 qam
@@ -58,17 +60,18 @@ MIMO_PART1( H_3,SNR,str_type3,modOrd^4);      %16 qam
 %% PART 2 - OFDM 
 
 clc; clear all; close force all; 
-SNR = 0:0.1:5;
+SNR = 0:1:50;
 N_pts = 64;
 
 modOrd = 4; 
 
 mu = 16  ; % size of cyclic prefix
 %h1 = [ 1 ,zeros(1,mu+1) ] ;
-h1 = [ 0.99 , 0, 0 zeros(1,14) ];
-h2 =  [ 1 , 0.1 , 0.9, 0, zeros(1,13) ];
+h2 = [ 1 , 0.1, 0.9 , zeros(1,14) ];
+%h2 =  [ 1 , 0.9 , 0.1, 0, zeros(1,13) ];
 
-h3 = [ 0.94 , 0.17 , 0.05 0.01 zeros(1,13) ];
+%h2 = [1 ] ;
+h3 = [ 0.94 , 0.17 , 0.05 0.01 0.01*ones(1,13) ];
 %h1 = 0.1*[ 5, 3, 2 ,zeros(1,14) ];  %MU = length(4)
 
 N = 64;
@@ -111,6 +114,31 @@ toc;
 
 
 %% PART 3 - OFDM & MIMO
+
+%clc; clear all; close force all; 
+SNR = 1:5:50  %:1:50;
+N_pts = 64;
+
+modOrd = 4; 
+%
+mu = 16  ; % size of cyclic prefix
+
+M_r = 2;
+M_t = 2;
+h =  [ 1  0  0  0 ]  ; 
+%h = [ h ; 1.05*h ; 0.975*h ; 0.99* h ]
+h =  [h ;  zeros(3,4) ] ; 
+N = 64;
+
+
+
+
+tic;
+[ mu_ZF , mu_MMSE , mu_NO_EQ ] = OFDM_N_MIMO_PART3(h, SNR,modOrd,mu,M_r,M_t,N_pts,N)
+toc;
+
+%%
+OFDM_N_MIMO_PART3(h, SNR,modOrd,mu,N_pts,N)
 
 %% OFDM modulator and demodulator in a simple, 2x2 MIMO error rate simulation
 
