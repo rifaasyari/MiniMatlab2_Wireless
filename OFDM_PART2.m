@@ -22,7 +22,7 @@ EbNoVec = SNR - 10*log10(modOrd);        % Eb/No in dB
 % M-ary QAM    %qammod(dataSymbolsIn,M,0);     and qamdemod(receivedSignal,M);     
 %modOrd                      % Size of signal constellation
 k = log2(modOrd);                % Number of bits per symbol
-n = k*64*1000;                  % Number of bits to process
+n = k*64*100;                  % Number of bits to process
 numSamplesPerSymbol = 1;    % Oversampling factor      
 rng default                 % Use default random number generator
 dataIn = randi([0 1],n,1);  % Generate vector of binary data
@@ -41,16 +41,19 @@ dataSymbolsIn_mat = reshape(dataSymbolsIn,[N, 1, (1/N)*length(dataSymbolsIn)]);
 
 %%
 
+H_freq = transpose(fft(h,N_pts)) ; 
+
+
 
 tic; 
 H = zeros( N_pts, mu+N_pts) ;
 for kk = 1 : N_pts
-    H(kk,kk:(kk+mu)) = h ;
+    H(kk,kk:(kk+mu)) = [h ,zeros(1,mu+1-length(h))] ;
 end
 toc; 
 
-H_freq = transpose(fft(h,N_pts)) ; 
- 
+
+
 tic;
 % Loop over N symbol messages
 for idx = 1:length(SNR) 
@@ -77,13 +80,13 @@ for idx = 1:length(SNR)
     
     %
    
-          
+    sig_power = var(x_input,1);      
     % Add noise to faded data   y = H* x + n
-    n = 10^(-snrIndB/20)*(randn(N_pts, 1) + j*randn(N_pts, 1))/sqrt(2) ; 
+    %n = sqrt(sig_power*10^(-snrIndB/10))*(randn(N_pts, 1) + j*randn(N_pts, 1))/sqrt(2) ; 
     %y_n  = H*x_input +  n ;
-    output = H*x_input;
-    sig_power = var(x_input,1);
-     y_n = awgn(output,snrIndB, sig_power) ;
+     output = H*x_input;
+    
+    y_n = awgn(output,snrIndB, sig_power) ;
     %y_remove_prefix = y_n(mu+1:end) ;
    
     y_ordered = flipud(y_n);

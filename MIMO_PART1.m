@@ -62,11 +62,12 @@ for idx = 1:length(SNR)
     % Modulate data
     txSig = qammod(msg,modOrd,0);
 
-          
+    sig_power = var(txSig,1);       
     % Add noise to faded data   y = H* x + n
-    n = 10^(-snrIndB/20)*(randn(M, 1) + j*randn(M, 1))/sqrt(2) ; 
-    y  = H*txSig +  n ;
-     
+    n =  sqrt(sig_power)*10^(-snrIndB/20)*(randn(M, 1) + j*randn(M, 1))/sqrt(2) ; 
+    %y  = H*txSig +  n ;
+    y = awgn( H*txSig,snrIndB, sig_power)  ;
+    
     rx_BASELINE = qamdemod(y,modOrd); 
     BER_BASELINE(idx,p) = biterr(rx_BASELINE,msg);
       
@@ -93,7 +94,7 @@ for idx = 1:length(SNR)
     
        
     %MMSE 
-    N_0 = 10^(-snrIndB/20); 
+    N_0 = sig_power*10^(-snrIndB/10); 
     W_MMSE = inv(H'*H + N_0*eye(size(H'*H )))*H' ; 
     rxSig_MMSE = qamdemod(W_MMSE*y,modOrd);
     BER_MMSE(idx,p)  = biterr(rxSig_MMSE,msg) ;  
@@ -107,7 +108,7 @@ toc;
     %%
        
 % Set up a figure for visualizing BER results
-f1 = figure('Visible','off');
+f1 = figure; %('Visible','off');
 semilogy(SNR(:), mean(BER_ZF,2)/modOrd, 'r*' , ...
        SNR(:), mean(BER_MMSE,2)/modOrd, 'b+' , ...
        SNR(:), mean(BER_PRECODING,2)/modOrd, 'mo', ...
