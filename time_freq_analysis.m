@@ -1,8 +1,36 @@
 function [ output_args ] = time_freq_analysis( S, threshold)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
+clc; clear all; close all; 
 
-S_binary = S > threshold ; 
+t = 0:0.01:10;
+fs = 100; 
+x = sin(2*pi* 10* t) + 0.5 * sin(2*pi*5*t) ; 
+[s f t p] = spectrogram(x,fs);
+PSD = 10*log10(p);
+f = f*fs/pi ; 
+
+figure;
+surf(t,f,PSD,'edgecolor','none'); axis tight; 
+view(0,90); 
+colorbar; 
+xlabel('Time (s) ');
+ylabel('Frequency (Hz)');
+zlabel('PSD (t,f)');
+
+
+%%
+threshold = 0.1*max(PSD(:)) ; 
+PSD_binary = double(PSD > threshold);
+
+
+figure;
+surf(t,f,PSD_binary,'edgecolor','none'); axis tight; 
+view(0,90); 
+colorbar; 
+xlabel('Time (s) ');
+ylabel('Frequency (Hz)');
+zlabel('PSD BINARY (t,f)')
 
 %%
 clc; clear all ; close all; 
