@@ -9,7 +9,6 @@ function [ f1, f2, f3, f4,f5, t, f, PSD , PSD_binary,B, centds, horizontal_proje
 [s f t p] = spectrogram(S,fs);
 PSD = 10*log10(p);
 f = f*fs/pi ; 
-
 f1 = figure;
 surf(t,f,PSD,'edgecolor','none'); axis tight; 
 view(0,90); 
@@ -113,15 +112,15 @@ f4 =  figure; plot(f,horizontal_projection) ;
 xlabel('Frequency (Hz)','Fontsize',12);
 ylabel('Total Number of Pixels','Fontsize',12);
 grid on ; 
-title(['Horizontal Projection along Frequency Axis',' ' ,'(',str,')'],'Fontsize',16);
-saveas(f4,strcat(str,'Horizontal Projection along Frequency Axis', '_', 'T =','_',num2str(threshold)),'png');
+title(['Projection along Time Axis',' ' ,'(',str,')'],'Fontsize',16);
+saveas(f4,strcat(str,'Projection along Time Axis', '_', 'T =','_',num2str(threshold)),'png');
 
 f5 = figure; plot(t,vertical_projection) ;
 xlabel('Time (s)','Fontsize',12);
 ylabel('Total Number of Pixels','Fontsize',12);
 grid on; 
-title(['Vertical Projection along Time Axis',' ' ,'(',str,')'],'Fontsize',16);
-saveas(f5,strcat(str,'Vertical Projection along Time Axis', '_', 'T =','_',num2str(threshold)),'png');
+title(['Projection along Frequency Axis',' ' ,'(',str,')'],'Fontsize',16);
+saveas(f5,strcat(str,'Projection along Frequency Axis', '_', 'T =','_',num2str(threshold)),'png');
 
 end
 
