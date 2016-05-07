@@ -2,7 +2,7 @@ clear all; close all;
 
 %%
 fhss;
-time_freq_analysis(signal, -20, 100, 'Frequency Hopping Spread Spectrum');
+past_approach(signal, -20, 100, 'FHSS (previous work)');
 
 
 %%
@@ -14,6 +14,6 @@ modOrd = 4;
 mu = 16;
 N = 64;
 ofdm_symbols = gen_ofdm(h, SNR, modOrd, mu, N, N);
-time_freq_analysis(ofdm_symbols, 0, 2, 'OFDM');
+past_approach(ofdm_symbols, 0, 2, 'OFDM (previous work)');
 
 
