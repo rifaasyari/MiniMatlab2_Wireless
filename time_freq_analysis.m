@@ -81,17 +81,17 @@ B = medfilt2(PSD_binary, [3,3 ]);
 
 
 %figure; imshow(A,'InitialMagnification', 800); 
-f2 = figure; imagesc(f,t,PSD_binary); 
+f2 = figure; imagesc(t,f,PSD_binary); 
 title(['PSD Threshold Binary Image', ' ', 'T =','',num2str(threshold),' ' ,'(',str,')'],'Fontsize',14);
-xlabel('Frequency, (Hz)','Fontsize',12);
-ylabel('Time (s)','Fontsize',12); 
+ylabel('Frequency, (Hz)','Fontsize',12);
+xlabel('Time (s)','Fontsize',12); 
 colorbar;
 saveas(f2,strcat(str, 'PSD_Threshold_Binary_Image', '_', 'T =','_',num2str(threshold)),'png');
 
-f3 = figure; imagesc(f,t,B);  
+f3 = figure; imagesc(t,f,B);  
 title(['PSD Median Filtered Binary Image', ' ', 'T =','',num2str(threshold), ' ' ,'(',str,')'],'Fontsize',14);
-xlabel('Frequency, (Hz)','Fontsize',12);
-ylabel('Time (s)','Fontsize',12);
+ylabel('Frequency, (Hz)','Fontsize',12);
+xlabel('Time (s)','Fontsize',12);
 colorbar;
 saveas(f3,strcat(str,'PSD_Median_Filtered_Binary_Image', '_', 'T =','_',num2str(threshold)),'png');
 
