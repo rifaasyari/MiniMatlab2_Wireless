@@ -1,4 +1,6 @@
-function [ output_args ] = time_freq_analysis( S, threshold, fs)
+function [ f1, f2, f3, f4,f5, t, f, PSD , PSD_binary,B, centds, horizontal_projection,... 
+         vertical_projection ]   ...
+        = time_freq_analysis( S, threshold, fs, str)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 %t = 0:0.01:10;
@@ -8,27 +10,24 @@ function [ output_args ] = time_freq_analysis( S, threshold, fs)
 PSD = 10*log10(p);
 f = f*fs/pi ; 
 
-figure;
+f1 = figure;
 surf(t,f,PSD,'edgecolor','none'); axis tight; 
 view(0,90); 
 colorbar; 
-xlabel('Time (s) ');
-ylabel('Frequency (Hz)');
-zlabel('PSD (t,f)');
+xlabel('Time (s) ','Fontsize',12);
+ylabel('Frequency (Hz)','Fontsize',12);
+zlabel('PSD (t,f)','Fontsize',12);
+
+title(['Original PSD', ' ' ,'(',str,')'],'Fontsize',16);  
+
+
+saveas(f1,strcat(str, '_Original_PSD'),'png');
 
 
 %%
 %threshold = 0.1*max(PSD(:)) ; 
 PSD_binary = double(PSD > threshold);
 
-
-figure;
-surf(t,f,PSD_binary,'edgecolor','none'); axis tight; 
-view(0,90); 
-colorbar; 
-xlabel('Time (s) ');
-ylabel('Frequency (Hz)');
-zlabel('PSD BINARY (t,f)')
 
 %%
 %clc; clear all ; close all; 
@@ -82,16 +81,26 @@ B = medfilt2(PSD_binary, [3,3 ]);
 
 
 
-
 %figure; imshow(A,'InitialMagnification', 800); 
-figure; imshow(PSD_binary,'InitialMagnification', 800); 
-figure; imshow(B,'InitialMagnification', 800); 
+f2 = figure; imagesc(f,t,PSD_binary); 
+title(['PSD Threshold Binary Image', ' ', 'T =','',num2str(threshold),' ' ,'(',str,')'],'Fontsize',16);
+xlabel('Frequency, (Hz)','Fontsize',12);
+ylabel('Time (s)','Fontsize',12); 
+colorbar;
+saveas(f2,strcat(str, 'PSD_Threshold_Binary_Image', '_', 'T =','_',num2str(threshold)),'png');
+
+f3 = figure; imagesc(f,t,B);  
+title(['PSD Median Filtered Binary Image', ' ', 'T =','',num2str(threshold), ' ' ,'(',str,')'],'Fontsize',16);
+xlabel('Frequency, (Hz)','Fontsize',12);
+ylabel('Time (s)','Fontsize',12);
+colorbar;
+saveas(f3,strcat(str,'PSD_Median_Filtered_Binary_Image', '_', 'T =','_',num2str(threshold)),'png');
 
 D = bwlabel(B);
 
 measurements = regionprops(D,'Centroid');
 
-measurements.Centroid
+centds = measurements.Centroid ;
 
 horizontal_projection = sum(B , 1) ;
 
@@ -100,8 +109,19 @@ horizontal_coords = find( horizontal_projection >= 0.1*max_h) ;
 
 vertical_projection = sum(B, 2) ; 
 %%
- figure; plot(horizontal_projection) ;
-  figure; plot(vertical_projection) ;
+f4 =  figure; plot(t,horizontal_projection) ;
+xlabel('Time (s)','Fontsize',12);
+ylabel('Total Number of Pixels','Fontsize',12);
+grid on ; 
+title(['Horizontal Projection onto Time Axis',' ' ,'(',str,')'],'Fontsize',16);
+saveas(f4,strcat(str,'Horizontal Projection onto Time Axis', '_', 'T =','_',num2str(threshold)),'png');
+
+f5 = figure; plot(f,vertical_projection) ;
+xlabel('Frequency (Hz)','Fontsize',12);
+ylabel('Total Number of Pixels','Fontsize',12);
+grid on; 
+title(['Vertical Projection onto Frequency Axis',' ' ,'(',str,')'],'Fontsize',16);
+saveas(f5,strcat(str,'Vertical Projection onto Time Axis', '_', 'T =','_',num2str(threshold)),'png');
 
 end
 
