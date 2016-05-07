@@ -102,26 +102,26 @@ measurements = regionprops(D,'Centroid');
 
 centds = measurements.Centroid ;
 
-horizontal_projection = sum(B , 1) ;
+horizontal_projection = sum(B , 2) ;
 
 max_h = max(horizontal_projection) ; 
 horizontal_coords = find( horizontal_projection >= 0.1*max_h) ; 
 
-vertical_projection = sum(B, 2) ; 
+vertical_projection = sum(B, 1) ; 
 %%
-f4 =  figure; plot(t,horizontal_projection) ;
-xlabel('Time (s)','Fontsize',12);
-ylabel('Total Number of Pixels','Fontsize',12);
-grid on ; 
-title(['Horizontal Projection onto Time Axis',' ' ,'(',str,')'],'Fontsize',16);
-saveas(f4,strcat(str,'Horizontal Projection onto Time Axis', '_', 'T =','_',num2str(threshold)),'png');
-
-f5 = figure; plot(f,vertical_projection) ;
+f4 =  figure; plot(f,horizontal_projection) ;
 xlabel('Frequency (Hz)','Fontsize',12);
 ylabel('Total Number of Pixels','Fontsize',12);
+grid on ; 
+title(['Horizontal Projection along Frequency Axis',' ' ,'(',str,')'],'Fontsize',16);
+saveas(f4,strcat(str,'Horizontal Projection along Frequency Axis', '_', 'T =','_',num2str(threshold)),'png');
+
+f5 = figure; plot(t,vertical_projection) ;
+xlabel('Time (s)','Fontsize',12);
+ylabel('Total Number of Pixels','Fontsize',12);
 grid on; 
-title(['Vertical Projection onto Frequency Axis',' ' ,'(',str,')'],'Fontsize',16);
-saveas(f5,strcat(str,'Vertical Projection onto Time Axis', '_', 'T =','_',num2str(threshold)),'png');
+title(['Vertical Projection along Time Axis',' ' ,'(',str,')'],'Fontsize',16);
+saveas(f5,strcat(str,'Vertical Projection along Time Axis', '_', 'T =','_',num2str(threshold)),'png');
 
 end
 
