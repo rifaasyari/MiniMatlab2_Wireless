@@ -1,5 +1,4 @@
 % Frequency Hopping Spread Spectrum
-
 % Generation of bits
 N=20; 
 s=randi([0 1],1, N);   % Generating N bits
@@ -22,9 +21,15 @@ for k=1:N
 end
 %stairs(signal);
 
+fhss_var
+noise_vec = sqrt(fhss_var) * randn(1, length(signal));
+signal_noisy = signal + noise_vec;
+
+signal_noisy(1:10)
+
  
 % BPSK Modulation of the signal
-bpsk_sig=signal.*carrier;   % Modulating the signal
+bpsk_sig=signal_noisy.*carrier;   % Modulating the signal
 
 % Preparation of 6 new carrier frequencies
 t1=0:2*pi/8:2*pi;

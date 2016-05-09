@@ -24,7 +24,6 @@ EbNoVec = SNR - 10*log10(modOrd);        % Eb/No in dB
 k = log2(modOrd);                % Number of bits per symbol
 n = k*64*100;                  % Number of bits to process
 numSamplesPerSymbol = 1;    % Oversampling factor      
-rng default                 % Use default random number generator
 dataIn = randi([0 1],n,1);  % Generate vector of binary data
 dataInMatrix = reshape(dataIn,length(dataIn)/k,k);   % Reshape data into binary k-tuples, k = log2(M)
 dataSymbolsIn = bi2de(dataInMatrix);                 % Convert to integers
@@ -50,7 +49,7 @@ for kk = 1 : N_pts
 end
 
 
-
+full_signal = []
 
 % Loop over N symbol messages
 for idx = 1:length(SNR) 
@@ -69,6 +68,7 @@ for idx = 1:length(SNR)
     % Modulate data
     txSig = qammod(msg,modOrd,0);
 
+    
     x = ifft(txSig,N_pts); 
     
     x_prefix =   x(end:-1:end-(mu-1) );
@@ -108,6 +108,7 @@ for idx = 1:length(SNR)
     %MMSE  EQUALIZATION
     N_0 = sig_power*10^(-snrIndB/10); 
     X_MMSE = Y_freq ./ (H_freq + N_0*ones(size(H_freq)));
+    full_signal = [full_signal; X_MMSE];
     rxSig_MMSE = qamdemod(X_MMSE,modOrd);
     BER_MMSE(idx,p) = biterr(rxSig_MMSE,msg) ;  
        

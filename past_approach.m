@@ -1,6 +1,4 @@
-function [ f1, f2, f3, f4,f5, t, f, PSD , PSD_binary,B, centds, horizontal_projection,... 
-         vertical_projection ]   ...
-        = past_approach( S, threshold, fs, str)
+function [PSD_binary,B ]  = past_approach( S, threshold, fs, str)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 %t = 0:0.01:10;
@@ -108,21 +106,7 @@ horizontal_projection = sum(B , 2) ;
 max_h = max(horizontal_projection) ; 
 horizontal_coords = find( horizontal_projection >= 0.1*max_h) ; 
 
-vertical_projection = sum(B, 1) ; 
-%%
-f4 =  figure; plot(f,horizontal_projection) ;
-xlabel('Frequency (Hz)','Fontsize',12);
-ylabel('Total Number of Pixels','Fontsize',12);
-grid on ; 
-title(['Projection along Time Axis',' ' ,'(',str,')'],'Fontsize',12);
-saveas(f4,strcat(str,'Projection along Time Axis', '_', 'T =','_',num2str(threshold)),'png');
 
-f5 = figure; plot(t,vertical_projection) ;
-xlabel('Time (s)','Fontsize',12);
-ylabel('Total Number of Pixels','Fontsize',12);
-grid on; 
-title(['Projection along Frequency Axis',' ' ,'(',str,')'],'Fontsize',12);
-saveas(f5,strcat(str,'Projection along Frequency Axis', '_', 'T =','_',num2str(threshold)),'png');
 
 end
 
